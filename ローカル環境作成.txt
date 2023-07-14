@@ -1,0 +1,262 @@
+ローカル環境作成
+    ・エディタまたはIDEについては基本任意。自分の使いやすいものまたはチーム内で共有しているものを使用する。
+        例)
+            VisucalStudioCode(エディタ):JavaScript および Web 開発者向けの製品で、あらゆるプログラミング言語をサポートする拡張機能が用意。
+                https://code.visualstudio.com/
+            Eclipse(IDE)：Javaベースの拡張可能なオープン・ソースの開発プラットフォーム。Java以外でもPysthon,PHP,C言語など複数の言語でも使用可能。
+                https://mergedoc.osdn.jp/
+            PHPStorm:PHP専用のIDE。他IDEに比べ速度が軽量でコードの補完機能が付与されているなど操作・確認が行いやすい環境となっている。
+                https://www.jetbrains.com/ja-jp/phpstorm/
+            Unity：ゲームソフト開発の際に利用されるIDE。あらゆる基盤に対応可能なほか、各操作方法などを学べる学習環境も充実している。
+                https://unity.com/ja
+        etd....
+
+    ・SQLクライアントについても任意。こちらも自分の使いやすいものまたはチーム内で共有しているものを使用する。
+        例)
+            MySQL Workbench:MacおよびWindowsともに配布が行われているDBクライアント接続ツール。MySQLと記載のある通り基本専用ツールとなるため別DBには利用できない。
+                https://www.mysql.com/jp/products/workbench/
+            A5:SQL Mk-2:Windowsユーザーの使用率の高いツール。無料であるがER図自動生成やSQL自動生成などほしい機能は充実している。
+                こちらは複数のDB環境で使用可能。
+                https://a5m2.mmatsubara.com/
+            phpMyAdmin:Serverに入れ込んでブラウザ上から確認の行えるツール。ブラウザ上で操作が行えるため専用のソフトを入れる必要がない。
+                反面セキュリティをきちんとしていないと外部からも確認できてしまうため、環境によって考慮する必要がある。
+                こちらはMySql専用。Oracle側の同じようなツールは「Oracle Enterprise Manager」
+                https://www.phpmyadmin.net/
+            DBeaver
+                Mac,Wiendowsともに使用が行えるツール。NoSqlやクラウドストレージのサポートなど全機能を使用するには有償版を使用する必要あり。
+                ただDBからの基本的な処理は無料版でも利用できるため現場に合わせる形にはなる。
+                こちらはMySQL, PostgreSQL, SQLiteなど殆どのツールに対応が行われている。
+                https://dbeaver.io/
+        etc...
+    
+    ・Git環境を構築
+        基本は下記URLを参照。こちらでは箇条書きで構成方法を記載する。
+        参考：[【Windows】Gitの環境構築をしよう！]:https://prog-8.com/docs/git-env-win
+            [Git公式：Book]https://git-scm.com/book/ja/v2
+            ・Gitのインストール
+                Git公式サイトから落としてきてインストールを実施。
+                https://git-scm.com/
+            ・Gitの初期設定
+                インストール完了後GitBashを開き「ユーザー名」「メールアドレス」などを設定。
+                     git config --global user.name "ユーザー名"
+                     git config --global user.email "メールアドレス"
+
+            ※GitHubと連携をとるには「GitHubの設定」「SSHの設定」まで行う必要あり。
+            　ユーザー名とメールドレスは統一すること
+            ※GitHubと連携を取った後は疎通確認まで実施すること
+            ※プロジェクトで設定を指定されているところもある。指定されている内容で設定を実施。
+            ※Gitインストール後GitクライアントツールによるCloneで疎通確認の可能性あり。
+
+        VsCodeなどにプラグインを入れたりGitBashによるコマンドでも管理が行えるが、
+        別途GUIで確認できるようToolを取り入れる
+            ・TortaiseGit：Windows側での管理向けのG位tクライアント。エクスプローラーに統合されており、Cloneなどはしやす印象がある。
+                https://tortoisegit.org/
+            ・SoureTree：Mac側で使用が行われていたGitクライアント。Winodows側での配布も行われておりチーム内でOSが複数分かれているのならばこちらのソフトを使用。
+                http://sourcetreeapp.com/
+
+    ・言語系の情報をインストール
+        VScodeなどを使用する際にローカル環境に言語系のミドルウェアをインストールしておく必要あり。
+        担当がPHPであるためこちらのインストール方法について記載。
+        ※[PHP for Windows]は7系で最後でMicrosoftでは8系以降はサポート対応していない。
+        　インストールできないわけではないがバイナリの提供がされないためWindowsServerには使用は向かない。
+            ・「Visual C ランタイム」が入っていることを確認
+            ・公式サイトよりPHPのミドルウェアをダウンロード（Thred Safe）
+                https://www.php.net/downloads
+            ・PHPをインストール
+            ・環境変数を設定
+                「環境変数名の編集」を開く
+                「Path」を選択して編集を実施
+        　
+        参考：  https://www.php.net/manual/ja/install.windows.php
+                https://webnote.i-sight.jp/install-windows-php8/#toc2
+        
+
+
+    ・動作環境を作成
+        基本的に現場ごとに指定される開発環境が存在。1から作成を行う場合はチーム内への共有のことも考えて下記のような方法をとる必要もある。
+        現場によっては併用して構成を行っている場所もある。
+        構成方法については簡潔に箇条書きに手記述を行う。
+            例)
+                Vagrant:仮想マシンを簡単に構築、管理できるツール。
+                    VirtualBoxやVmWareなどの仮想環境を作成するツールと併用して使用を行う。仮想環境を管理するサーバーを作成するイメージ。
+                    各プロセスを1まとめとしサービス構成を内部で完結する状態となる。
+                    https://www.vagrantup.com/
+                Docker:コンテナ型の仮想環境を作成、配布、実行するためのツール。
+                    プロセスごとにコンテナを分けそれぞれ関連付けして1つのサービスを構成する形となる。
+                    https://docs.docker.jp/#
+                ansible:LinuxOsに関する環境の構成管理ツール。
+                    独自記述言語を採用しているため学習コストは高いが、各種ソフトのインストールや設定変更、アカウントの管理など自動構成を行ってくれる。
+                    https://www.redhat.com/ja/technologies/management/ansible
+            etc...
+        
+            Vagrantでの環境作成例：[Hyper-V]でも構築できないわけではないが[VirtualBox]での例について記載する
+                ※[Hyper-V]がWindows用のものであり他OSでは使用できない。一旦どの環境でも動作する仮想環境で構築する。
+                ※こちらでの実施の場合は[Hyper-V]は無効化しておくこと
+                ※参考1:https://qiita.com/AkihikoIkeda/items/6e886f74a934e0ddfcab
+                ※参考2:https://www.webopixel.net/develop/835.html
+                ・[VirtualBox]をインストールする
+                    https://www.virtualbox.org/wiki/Downloads
+                ・[Vagrant]をインストールする
+                    https://www.vagrantup.com/
+                ・動作を実行するBoxを取得する
+                    下記URLを確認し該当のOS,システムのものを選んでBoxの取得を行う
+                    http://www.vagrantbox.es/
+                    Cmd: vagrant box add {任意名称} http://developer.nrel.gov/downloads/vagrant-boxes/{該当するBox}
+                ・作業ディレクトリ作成/規定パスに移動 
+                ・動作確認
+                    vagrant init : Vagrantの初期設定(Vagrantfileの作成)を行う
+                        Vagrantfile作成後は中身を確認,必要ならば修正を実施。
+                        例)
+                                Vagrant.configure("2") do |config|
+                                # Box名
+                                config.vm.box = "CentOS7"
+                                # ここで指定したIPを叩いてブラウザに表示
+                                config.vm.network "private_network", ip: "192.168.33.10"
+                                # メモリ指定(数値は自分の環境と相談)
+                                config.vm.provider "virtualbox" do |vb|
+                                vb.customize ["modifyvm", :id, "--memory", "1024"]
+                                end
+
+                                # Windows側のファイルを、仮想サーバに認識させる
+                                # 直下(".")のファイルを、仮想サーバ内では`/vagrant`として扱う感じとなる
+                                config.vm.synced_folder ".", "/vagrant", mount_options:['dmode=777','fmode=777']
+                                end
+
+
+                    vagrant up : vagrant起動
+                    vagrant status :　vagrantの状態確認
+                    vagrant ssh : vagrantで起動中のOSに接続
+                        ※基本的にLinuxのOSを使用していると思われるためCUIにて作業
+                        ・古いバージョンのソフトで動いている可能性があるためソフトのアップデートを行う
+                            例)sudo yum update
+                        ・Webサーバーを用意
+                            sudo yum -y install httpd
+                            sudo systemctl start httpd.service
+                            sudo systemctl enable httpd.service
+                            ※ sudo systemctl stop firewalld
+                            ※ sudo systemctl disable firewalld
+                            ※ 環境によってはFireWallの設定を変更する必要あり。一旦動作確認のため設定を切る。
+                        ・HTMLファイルを用意し仮想サーバー側で見れるようにする
+                            sudo rm -rf /var/www/html
+                            sudo ln -fs /vagrant /var/www/html
+                            ※Vagrantfile側でも設定しておく必要あり
+                            ※画面が表記されることを確認
+                        ・PHPの導入
+                            sudo yum -y install epel-release
+                            sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+                            sudo yum -y install --enablerepo=remi,remi-php71 php php-devel php-mbstring php-pdo php-gd php-xml php-mcrypt
+                        ・Apacheの再起動
+                            sudo systemctl restart httpd.service
+                    vagrant halt：vagrantの停止
+
+
+            Dockerでの環境作成例：[Windowsの機能の有効化または無効化]の機能で確認が必要
+                ※[Hyper-V]が有効化状態であることが前提。
+                ※[Linux用Windowsサブシステム（WSL）]が有効化状態であることが前提。
+                ※[仮想マシン プラットフォーム]が有効化状態であることが前提。
+                    [WSL kernel]に関する警告が出た場合は、Windowsの該当機能自体をアップデートする必要あり。
+                ※参考1:https://qiita.com/buzzdark1212/items/b542161523aa324d9c3d
+                ※参考2:プログラマのためのDocker教科書
+                    https://www.shoeisha.co.jp/book/detail/9784798153223
+                ※参考3:https://docs.docker.com/compose/install/
+                ・Docker Desktopのインストール
+                    公式サイトからインストーラーをダウンロード
+                    ※インストール終了後再起動を行うこととなる。別アプリは閉じておくこと推奨。
+                ・インストール確認 ※管理者権限で確認
+                    [コマンドプロンプト]または[Power Shell]を開く
+                    ※[Docker Desktop]が起動していないと動かないことがある。
+                    　動作していない場合は[すべてのアプリ]から[Docker Desktop]を探し起動しておくこと
+                    下記コマンドを打ち込み動作すれば完了
+                        Cmd: docker -v
+                            表示例) Docker version {バージョン}, build {ビルド番号}
+                ・「Docker Compose」を確認 ※管理者権限で確認
+                    [コマンドプロンプト]または[Power Shell]を開く
+                    [Cmd: docker-compose version]を打ち込みインストールされているか確認
+                        ※インストールされている場合はこちらはスキップ
+                    入っていない場合はインストールを実施
+                        [TLS 1.2]が有効確認
+                            [インターネットオプション]を開き、詳細画面から「TLS 1.2の使用」がチェックされているか確認
+                         [コマンドプロンプト]または[Power Shell]でコマンドにて公式からインストールを実施
+                             Invoke-WebRequest "https://github.com/docker/compose/releases/download/{バージョン}/docker-compose-Windows-x86_64.exe" -UseBasicParsing -OutFile $Env:ProgramFiles\docker\docker-compose.exe
+                            ※{バージョン}部分は下記を確認し安定板のものを指定する。
+                                https://github.com/docker/compose/releases
+
+            ※下記以降はPHPでの環境例で作成。必要にあったイメージを確認していれること
+            ※下記以降は動かすためのディレクトリの構成が行われていることが前提となる。自分の環境にあった形で実施すること。
+                イメージ一覧：
+                    https://hub.docker.com/search?image_filter=official&q=
+                    https://github.com/docker-library/official-images/tree/master/library
+                ・[Dockerfile]の記述を実施
+                    こちらは必須ファイルとなる。単一コンテナの場合はこちらのみの記述。
+                    作成したい環境のイメージ及び実施する処理、連携したいディレクトリなどを記載する。
+                        記載例)
+                                # イメージの取り込み
+                                FROM php:7.4-apache
+                                # ミドルウェアをインストール
+                                RUN apt-get update && apt-get install -y libonig-dev && docker-php-ext-install pdo_mysql mysqli mbstring
+                                # ローカルで用意していた各連携ファイルをコンテナ上に配置する
+                                ADD php.ini /usr/local/etc/php/
+                                ADD 000-default.conf /etc/apache2/sites-enabled/
+
+                ・[docker-compose.yml]の記述を実施
+                    複数のコンテナを連携する場合は事らも記述。
+                    １コンテナ１サーバーのイメージで設定を行う
+                        記載例)
+                                # Compose fileのバージョン指定
+                                version: '1'
+                                # 連携・処理を行うコンテナを記載
+                                services:
+                                    # Webサーバー
+                                    app:
+                                        # コンテナ名指定
+                                        container_name: php-web-backend
+                                        # Dockerfileを使用したビルド実施
+                                        build: ./docker/app
+                                        # 繋げるポート番号を指定
+                                        ports:
+                                        - 8000:80
+                                        # 連携するディレクトリを指定
+                                        # こちらでは[Document Directory]の連携を行っている
+                                        volumes:
+                                        - ./src:/var/www/html
+                                    # DBサーバー
+                                    mysql:
+                                        # コンテナ名指定
+                                        container_name: mysql
+                                        # イメージを使用したビルド実施
+                                        image: mysql:5.7
+                                        # 連携するディレクトリを指定
+                                        # こちらではMysqlの設定ファイルを連携している
+                                        volumes:
+                                        - ./mysql:/var/lib/mysq
+                                        # 繋げるポート番号を指定
+                                        ports:
+                                        - 3306:3306
+                                        # 初期環境の作成
+                                        environment:
+                                        - MYSQL_ROOT_PASSWORD=root
+                                        - MYSQL_DATABASE=localdb
+                                        - MYSQL_USER=tester
+                                        - MYSQL_PASSWORD=test0123
+                ・Dockerを立ち上げる
+                    [コマンドプロンプト]または[Power Shell]を開く
+                    [docker-compose.yml]が配置しているディレクトリまで移動
+                    下記コマンドを実施
+                        # コンテナをビルドする
+                        Cmd: docker-compose build
+                        # コンテナを起動する
+                        Cmd: docker-compose up -d
+                        # コンテナの起動状態を確認する
+                        Cmd: docker-compose ps
+                    ※その他参考コマンド
+                        # 起動しているコンテナに入る
+                        Cmd: docker-compose exec {コンテナ名} /bin/bash
+                        # ログを確認する
+                        Cmd: docker-compose logs
+                        # コンテナを停止する
+                        Cmd: docker-compose stop
+                        # コンテナの削除
+                        Cmd: docker-compose rm
+                ・ブラウザから動作状態を確認する
+                    表示されていれば完了
+                    http://localhost:8000/
