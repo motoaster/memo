@@ -238,6 +238,9 @@
                                         - MYSQL_DATABASE=localdb
                                         - MYSQL_USER=tester
                                         - MYSQL_PASSWORD=test0123
+                                #実行順序を変更して実施
+                                volumes:
+                                    mysql:
                 ・Dockerを立ち上げる
                     [コマンドプロンプト]または[Power Shell]を開く
                     [docker-compose.yml]が配置しているディレクトリまで移動
