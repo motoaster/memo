@@ -263,3 +263,8 @@
                 ・ブラウザから動作状態を確認する
                     表示されていれば完了
                     http://localhost:8000/
+
+
+aster-isk
+ultimatenervous.com
+ultimate-plus

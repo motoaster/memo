@@ -1,0 +1,19 @@
+Connect-ExchangeOnline -UserPrincipalName m.watanabe@asterisk2023.onmicrosoft.com
+ [-ExchangeEnvironmentName <Value>] [-ShowBanner:$false] [-DelegatedOrganization <String>] [-SkipLoadingFormatData]
+Connect-ExchangeOnline -UserPrincipalName m.watanabe@aster-isk.co.jp
+
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "smtp:nishi@aster-isk.co.jp"} | fl Name, RecipientType, EmailAddresses
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "nishi@aster-isk.co.jp"} | fl Name, RecipientType, EmailAddresses
+
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "smtp:nishi@aster-isk.co.jp"} | fl Name, RecipientType, EmailAddresses
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "<conflicting SMTP address>"} | fl Name, RecipientType, EmailAddresses
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "<partial conflicting SMTP address>"} | fl Name, RecipientType, EmailAddresses
+
+
+Get-EXORecipient -ResultSize unlimited | Where-Object {$_.EmailAddresses -match "nishi@asterisk2023.onmicrosoft.com"} | fl Name, RecipientType, EmailAddresses
+
+
+Get-MailPublicFolder -ResultSize Unlimited | Where-Object {$_.EmailAddresses -match "nishi@asterisk2023.onmicrosoft.com"}
+
+
+プロキシ アドレスは、一度に 1 つのオブジェクトにのみ割り当てることができます。 競合しているオブジェクトを特定したら、そのオブジェクトに関連付けられているプロキシ アドレスを削除または変更します。

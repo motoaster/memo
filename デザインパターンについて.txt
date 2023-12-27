@@ -1,0 +1,697 @@
+<div>
+<h3>デザインパターン</h3>
+<strong>そもそもデザインパターンとは</strong>
+<p style="margin-top:4px">
+過去のソフトウェア設計者が発見し編み出した設計ノウハウを蓄積し、名前をつけ、再利用しやすいように特定の規約に従ってカタログ化したもの。<br>
+簡潔に説明するとよく起きる問題に対する典型的な解決方法のことを指す。<br>
+JAVAの開発の参考として[オブジェクト指向における再利用のためのデザインパターン]として23個のパターンが紹介されたのが認知の広まり。<br>
+元はJAVAから広まったものですが現在ではPHPやPythonなど他の言語でも使用されている。<br>
+把握していなくてもデザインパターンを使用していることがあるので片隅においておければ助けになるかもしれません。
+</p>
+</div>
+
+<hr>
+<div>
+<strong>デザインパターンを把握することでできること</strong>
+<p style="margin-top:4px">
+過去に発生した事象や問題に対する対処をまとめたものとなり、再利用性の高い柔軟な設計を行うことができるようになります。<br>
+過去のエンジニアたちがすでに遭遇した物となるため1から対処する内容もへり、生産性の向上が期待できます。<br>
+また、パターンとして名義しているため指示出しも行いやすくなります。<br>
+パターンを把握しているユーザー同士の場合、パターン名称で伝えれば済む形となるためクラス構成やファイルの役割など細かく説明する手間がなくなります。
+</p>
+</div>
+
+<hr>
+<div>
+<strong>デザインパターン</strong>
+<p style="margin-top:4px">
+主な分類としては[生成][構造][振る舞い]の3つに分かれておりその中で細かなパターンとして記載が行われています。<br>
+すべてのを1ページでまとめて説明すると可視性が悪いため3分類のなかで数種類ずつ記載したいと思います。<br>
+興味がある方は[<a href="https://refactoring.guru/ja">参考1</a>], [<a href="https://www.techscore.com/tech/DesignPattern/">参考2</a>]を確認していただければと思います。
+</p>
+<strong>生成関連パターン</strong>
+<div style="margin-left:2em;margin-bottom:0.75em;padding:1.5em;border-radius: 8px;border: 1px solid #434343">
+<strong>Factory Method</strong>
+<p style="margin-top:4px">
+オブジェクトの生成方法に一工夫加えることで、より柔軟にオブジェクトを生成することを目的のパターン<br>
+</p>
+インターフェイスに定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>interface Robot
+{
+  // 共通で使用するメソッドを記述
+  public function say();
+}
+</code></pre>
+クラスを実装
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class BlueRobot implements Robot
+{
+    private $color;
+
+    public function __construct($color)
+    {
+        $this-&gt;color = $color;
+    }
+
+    // 同一名の関数に個別の処理を記述
+    public function say()
+    {
+        echo $this-&gt;color;
+    }
+}
+
+class YellowRobot implements Robot
+{
+    private $color;
+
+    public function __construct($color)
+    {
+        $this-&gt;color = $color;
+    }
+
+    // 同一名の関数に個別の処理を記述
+    public function say()
+    {
+        echo $this-&gt;color;
+    }
+}
+
+// 切替え用のクラス
+class RobotFactory
+{
+    public function create($color)
+    {
+        // 呼び出すクラスを指定
+        if ($color === 'blue') {
+            return new BlueRobot($color);
+        }
+
+        if ($color === 'yellow') {
+            return new YellowRobot($color);
+        }
+
+        // 呼び出し対象がない場合の処理記載
+        throw new Exception("Can't create an instance");
+    }
+}
+</code></pre>
+呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$robotFactory = new RobotFactory();
+try {
+    // 引数を変えるだけで同じメソッドで違う内容を取得することができる
+    $blueRobot = $robotFactory-&gt;create('blue');
+    $blueRobot-&gt;say();
+
+    $yellowRobot = $robotFactory-&gt;create('yellow');
+    $yellowRobot-&gt;say();
+} catch (\Exception $e) {
+    // [blue][yellow]以外の処理はこちらを記載
+    echo $e-&gt;getMessage();
+}
+</code></pre>
+<hr>
+<strong>Abstract Factory</strong>
+<p style="margin-top:4px">
+インスタンスの生成を専門に行うクラスを用意することで、整合性を必要とされる一連のオブジェクト群を間違いなく生成するパターン<br>
+</p>
+インターフェイスに定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>// 構成のメインとなるインターフェースを記載
+interface TemplateFactory
+{
+    public function createTitleTemplate(): TitleTemplate;
+
+    public function createPageTemplate(): PageTemplate;
+
+    public function getRenderer(): TemplateRenderer;
+}
+
+// ここから[タイトル][内容][構成]のもととなるインターフェースを記載
+interface TitleTemplate
+{
+    public function getTemplateString(): string;
+}
+
+interface PageTemplate
+{
+    public function getTemplateString(): string;
+}
+
+interface TemplateRenderer
+{
+    public function render(string $templateString, array $arguments = []): string;
+}
+</code></pre>
+
+Factory クラスを実装
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>// オブジェクトを構成するクラス群を作成
+// 全体構成用のクラス作成
+class PHPTemplateFactory implements TemplateFactory
+{
+    public function createTitleTemplate(): TitleTemplate
+    {
+        // タイトル形成用の処理を呼び出し
+        return new PHPTemplateTitleTemplate();
+    }
+
+    public function createPageTemplate(): PageTemplate
+    {
+        // 内容作成用の処理を呼び出し
+        return new PHPTemplatePageTemplate($this-&gt;createTitleTemplate());
+    }
+
+    public function getRenderer(): TemplateRenderer
+    {
+        // 構成用の処理を呼び出し
+        return new PHPTemplateRenderer();
+    }
+}
+
+// タイトル製造用のクラス作成
+class PHPTemplateTitleTemplate implements TitleTemplate
+{
+    public function getTemplateString(): string
+    {
+        return &quot;&lt;h1&gt;&lt?= \$title; ?&gt&lt;/h1&gt;&quot;
+    }
+}
+
+// 内容製造用の基礎クラス作成
+abstract class BasePageTemplate implements PageTemplate
+{
+    protected $titleTemplate;
+
+    public function __construct(TitleTemplate $titleTemplate)
+    {
+        $this-&gt;titleTemplate = $titleTemplate;
+    }
+}
+
+// 内容製造用のクラス作成
+class PHPTemplatePageTemplate extends BasePageTemplate
+{
+    public function getTemplateString(): string
+    {
+        $renderedTitle = $this-&gt;titleTemplate-&gt;getTemplateString();
+
+        return &lt;&lt;&lt;HTML
+        &lt;div class="page"&gt;
+            $renderedTitle
+            &lt;article class="content"&gt;&lt;/article&gt;
+        &lt;/div&gt;
+        HTML;
+    }
+}
+
+// 構成用のクラス作成
+class PHPTemplateRenderer implements TemplateRenderer
+{
+    public function render(string $templateString, array $arguments = []): string
+    {
+        extract($arguments);
+
+        ob_start();
+        eval(' ?&gt;' . $templateString . 'title = $title;
+        $this-&gt;content = $content;
+    }
+}
+
+class Page
+{
+
+    public $title;
+
+    public $content;
+
+    public function __construct($title, $content)
+    {
+        $this-&gt;title = $title;
+        $this-&gt;content = $content;
+    }
+    public function render(TemplateFactory $factory): string
+    {
+        $pageTemplate = $factory-&gt;createPageTemplate();
+
+        $renderer = $factory-&gt;getRenderer();
+
+        // 該当するFactoryを呼び出し、値を割り振る
+        return $renderer-&gt;render($pageTemplate-&gt;getTemplateString(), [
+            'title' =&gt; $this-&gt;title,
+            'content' =&gt; $this-&gt;content
+        ]);
+    }
+}
+</code></pre>
+呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$page = new Page('Sample page', 'This is the body.');
+echo $page-&gt;render(new PHPTemplateFactory());
+</code></pre>
+<hr>
+<strong>Singleton</strong>
+<p style="margin-top:4px">
+インスタンスが一つしかないことを保証したい場合、それを保証することを目的とするパターン<br>
+</p>
+クラスを定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class Singleton
+{
+    private static $instances = [];
+    protected function __construct() {}
+    protected function __clone() { }
+
+    public function __wakeup()
+    {
+        throw new \Exception("Cannot unserialize singleton");
+    }
+
+    public static function getInstance()
+    {
+        $subclass = static::class;
+        if (!isset(self::$instances[$subclass])) {
+            self::$instances[$subclass] = new static();
+        }
+        return self::$instances[$subclass];
+    }
+}
+
+class Logger extends Singleton
+{
+    private $fileHandle;
+    protected function __construct()
+    {
+        $this-&gt;fileHandle = fopen('php://stdout', 'w');
+    }
+
+    public function writeLog(string $message): void
+    {
+        $date = date('Y-m-d');
+        fwrite($this-&gt;fileHandle, "$date: $message\n");
+    }
+
+    public static function log(string $message): void
+    {
+        $logger = static::getInstance();
+        $logger-&gt;writeLog($message);
+    }
+}
+</code></pre>
+呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$l1 = Logger::getInstance();
+$l2 = Logger::getInstance();
+</code></pre>
+</div>
+
+<strong>構造関連パターン</strong>
+<div style="margin-left:2em;margin-bottom:0.75em;padding:1.5em;border-radius: 8px;border: 1px solid #434343">
+<strong>Adapter</strong>
+<p style="margin-top:4px">
+インタフェースに互換性の無いクラス同士を組み合わせることを目的としたパターン<br>
+</p>
+インターフェイスに定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>interface Notification
+{
+    public function send(string $title, string $message);
+}
+</code></pre>
+クラスを定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class EmailNotification implements Notification
+{
+    private $adminEmail;
+
+    public function __construct(string $adminEmail)
+    {
+        $this-&gt;adminEmail = $adminEmail;
+    }
+
+    public function send(string $title, string $message): void
+    {
+        mail($this-&gt;adminEmail, $title, $message);
+        echo "Sent email with title '$title' to '{$this-&gt;adminEmail}' that says '$message'.";
+    }
+}
+
+class SlackNotification implements Notification
+{
+    private $slack;
+    private $chatId;
+
+    public function __construct(SlackApi $slack, string $chatId)
+    {
+        $this-&gt;slack = $slack;
+        $this-&gt;chatId = $chatId;
+    }
+
+    public function send(string $title, string $message): void
+    {
+        $slackMessage = "#" . $title . "# " . strip_tags($message);
+        $this-&gt;slack-&gt;logIn();
+        $this-&gt;slack-&gt;sendMessage($this-&gt;chatId, $slackMessage);
+    }
+}
+</code></pre>
+呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$notification = new EmailNotification("developers@example.com");
+$notification = new SlackNotification($slackApi, "Example.com Developers");
+</code></pre>
+<hr>
+<strong>Facade</strong>
+<p style="margin-top:4px">
+既存のクラスを複数組み合わせて使う手順を、「窓口」となるクラスを作ってシンプルに利用できるようにするパターン<br>
+</p>
+処理クラス書き出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>public class BookList {
+	public searchBook(String $bookName) {
+        $books = new Book();
+		return $books-&gt;find(['book_name' =&gt; $bookName]);
+	}
+}
+
+public class LendingList {
+	public check(String $bookName) {
+        $history = new LendingHistory();
+		return $history-&gt;exists(['book_name' =&gt; $bookName, 'return_flag'=&gt;0]);
+	}
+}
+</code></pre>
+Facade書き出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>public class Librarian {
+	public searchBook(String $bookName) {
+		$bookList = new BookList();
+		$location = bookList::searchBook($bookName);
+		if (!empty($location)) {
+			$lendingList = new LendingList();
+			if ($lendingList::check(bookName)) {
+				return 0;
+			} else {
+				return $location;
+			}
+		//所蔵してないとき
+		} else {
+			return 1;
+		}
+	}
+}
+</code></pre>
+実処理呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>public class Visitor {
+	public main(String $list) {
+		$checker = new Librarian();
+		$location = checker.searchBook("昆虫図鑑");
+		if(is_object(location)){
+            		return $location-&gt;segment_name
+		}else{
+            		if(location){
+                		return 'Not have those Book';
+            		}else{
+                		return 'On loan';
+            		}
+        	}
+	}
+}
+</code></pre>
+</div>
+<strong>振る舞い関連パターン</strong>
+<div style="margin-left:2em;margin-bottom:0.75em;padding:1.5em;border-radius: 8px;border: 1px solid #434343">
+<strong>Command</strong>
+<p style="margin-top:4px">
+要求をオブジェクトにして、それらを複数組み合わせて使えるようにするパターン<br>
+</p>
+Receiverクラス作成
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class Ramen
+{
+    private $name;
+    private $ramen;
+
+    public function setName($name)
+    {
+        $this-&gt;name = sprintf('%sラーメン', $name);
+    }
+
+    public function getName()
+    {
+        return $this-&gt;name;
+    }
+
+    public function setRamen($ramen)
+    {
+        $this-&gt;ramen = $ramen;
+    }
+
+    public function getRamen()
+    {
+        return $this-&gt;ramen;
+    }
+
+    public function call()
+    {
+        echo sprintf('%s 注文入りました。<br>', $this-&gt;getName());
+    }
+}
+</code></pre>
+インターフェイスを定義
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>interface CommandInterface
+{
+    public function execute();
+}
+</code></pre>
+Command クラス作成
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class ShouyuCommand implements CommandInterface
+{
+    private $category = 'しょうゆ';
+
+    private $ramen;
+
+    public function __construct(Ramen $ramen)
+    {
+        $this-&gt;ramen = $ramen;
+        $this-&gt;ramen-&gt;setName($this-&gt;category);
+    }
+
+    public function execute()
+    {
+        /*
+         * 醤油ラーメンを作る処理
+         */
+
+        $this-&gt;ramen-&gt;call();
+    }
+}
+
+class MisoCommand implements CommandInterface
+{
+    private $category = 'みそ';
+
+    private $ramen;
+
+    public function __construct(Ramen $ramen)
+    {
+        $this-&gt;ramen = $ramen;
+        $this-&gt;ramen-&gt;setName($this-&gt;category);
+    }
+
+    public function execute()
+    {
+        /*
+         * 味噌ラーメンを作る処理
+         */
+
+        $this-&gt;ramen-&gt;call();
+    }
+}
+
+class ShioCommand implements CommandInterface
+{
+    private $category = 'しお';
+
+    private $ramen;
+
+    public function __construct(Ramen $ramen)
+    {
+        $this-&gt;ramen = $ramen;
+        $this-&gt;ramen-&gt;setName($this-&gt;category);
+    }
+
+    public function execute()
+    {
+        /*
+         * 塩ラーメンを作る処理
+         */
+
+        $this-&gt;ramen-&gt;call();
+    }
+}
+</code></pre>
+実行ファイル書き出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class Queue
+{
+    private $commands;
+
+    public function __construct()
+    {
+        $this-&gt;commands = [];
+    }
+    public function addCommand(Command $command)
+    {
+        $this-&gt;commands[] = $command;
+    }
+
+    public function run()
+    {
+        if (!empty($this-&gt;commands)) {
+           foreach ($this-&gt;commands as $command) {
+               $command-&gt;execute();
+           }
+           $this-&gt;commands = [];
+        }
+    }
+}
+</code></pre>
+実処理呼び出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$queue = new Queue();
+
+$queue-&gt;addCommand(new ShouyuCommand(new Ramen()));
+$queue-&gt;addCommand(new MisoCommand(new Ramen()));
+$queue-&gt;addCommand(new ShioCommand(new Ramen()));
+</code></pre>
+<hr>
+<strong>TemplateMethod</strong>
+<p style="margin-top:4px">
+スーパークラスで処理の枠組みを定め、サブクラスでその具体的内容を実装しテンプレートとしての機能を持たせるパターン<br>
+</p>
+基底クラス作成
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>abstract class Car
+{
+    /**
+     * ハンドル
+     * @return array
+     */
+    public function handle()
+    {
+        return ['right', 'left', 'horn'];
+    }
+
+    /**
+     * アクセル
+     * @return string
+     */
+    public function accelerator()
+    {
+        return 'move on!';
+    }
+
+    /**
+     * ブレーキ
+     * @return string
+     */
+    public function brake()
+    {
+        return 'stop';
+    }
+
+    // タイプ
+    protected abstract function type();
+    // エンジン
+    protected abstract function engine();
+    // ボディ
+    protected abstract function body();
+    // 内装
+    protected abstract function interior();
+}
+</code></pre>
+サブクラス作成
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>class MyCarNomal extends Car
+{
+    public function type()
+    {
+        return 'ノーマル';
+    }
+
+    public function engine()
+    {
+        return '直列4気筒DOHC';
+    }
+
+    public function body()
+    {
+        return 'Basic';
+    }
+
+    public function interior()
+    {
+        return 'white';
+    }
+}
+
+class MyCarSports extends Car
+{
+    public function type()
+    {
+        return 'スポーツ';
+    }
+
+    public function engine()
+    {
+        return 'V8ターボ';
+    }
+
+    public function body()
+    {
+        return 'carbon';
+    }
+
+    public function interior()
+    {
+        return 'red';
+    }
+
+    public function wing()
+    {
+        return 'GTウイング';
+    }
+}
+
+class MyCarLuxury extends Car
+{
+    public function type()
+    {
+        return 'ラグジュアリー';
+    }
+
+    public function engine()
+    {
+        return '3.0L直列6気筒ターボ';
+    }
+
+    public function body()
+    {
+        return 'Fiber reinforced plastic'; // 繊維強化プラスチック
+    }
+
+    public function interior()
+    {
+        return 'black';
+    }
+
+    public function sunroof()
+    {
+        return 'サンルーフ';
+    }
+}
+</code></pre>
+実処理書き出し
+<pre style="margin-bottom:0.75em;padding:0.75em;border-radius: 8px;border: 1px solid #434343;background: #25292f;color: #fff"><code>$normal = new MyCarNomal();
+echo "タイプ：" . $normal-&gt;type() . &quot;&lt;br&gt;&quot;;
+echo "エンジン：" . $normal-&gt;engine() . &quot;&lt;br&gt;&quot;;
+echo "アクセル：" . $normal-&gt;accelerator() . &quot;&lt;br&gt;&lt;br&gt;&quot;;
+
+$sports = new MyCarSports();
+echo "タイプ：" . $sports-&gt;type() . &quot;&lt;br&gt;&quot;;
+echo "エンジン：" . $sports-&gt;engine() . &quot;&lt;br&gt;&quot;;
+echo "アクセル：" . $sports-&gt;accelerator() . &quot;&lt;br&gt;&quot;;
+echo "独自装備：" . $sports-&gt;wing() . &quot;&lt;br&gt;&lt;br&gt;&quot;;
+</code></pre>
+</div>
+etc...
+</div>
+
+<hr>
+参考1：<a href="https://refactoring.guru/ja">Refactoring.Guru </a><br>
+参考2：<a href="https://www.techscore.com/tech/DesignPattern/">デザインパターン</a><br>
+参考3：<a href="https://www.sejuku.net/blog/60038">Javaデザインパターン全23種の特長をスッキリ解説</a>
